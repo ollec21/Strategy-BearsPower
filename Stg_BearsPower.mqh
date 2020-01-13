@@ -31,7 +31,7 @@ struct Stg_BearsPower_Params : Stg_Params {
   unsigned int BearsPower_Period;
   ENUM_APPLIED_PRICE BearsPower_Applied_Price;
   int BearsPower_Shift;
-  long BearsPower_SignalOpenMethod;
+  int BearsPower_SignalOpenMethod;
   double BearsPower_SignalOpenLevel;
   int BearsPower_SignalCloseMethod;
   double BearsPower_SignalCloseLevel;
