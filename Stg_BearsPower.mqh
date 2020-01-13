@@ -15,36 +15,28 @@
 
 // User input params.
 INPUT string __BearsPower_Parameters__ = "-- BearsPower strategy params --";  // >>> BEARS POWER <<<
-INPUT int BearsPower_Active_Tf = 0;  // Activate timeframes (1-255, e.g. M1=1,M5=2,M15=4,M30=8,H1=16,H2=32,H4=64...)
-INPUT ENUM_TRAIL_TYPE BearsPower_TrailingStopMethod = 22;         // Trail stop method
-INPUT ENUM_TRAIL_TYPE BearsPower_TrailingProfitMethod = 1;        // Trail profit method
-INPUT int BearsPower_Period = 13;                                 // Period
-INPUT ENUM_APPLIED_PRICE BearsPower_Applied_Price = PRICE_CLOSE;  // Applied Price
-INPUT int BearsPower_Shift = 0;                                   // Shift (relative to the current bar, 0 - default)
-INPUT double BearsPower_SignalOpenLevel = 0.00000000;             // Signal open level
-INPUT int BearsPower_SignalBaseMethod = 0;                        // Signal base method (0-
-INPUT int BearsPower_SignalOpenMethod1 = 0;                       // Open condition 1 (0-1023)
-INPUT int BearsPower_SignalOpenMethod2 = 0;                       // Open condition 2 (0-)
-INPUT double BearsPower_SignalCloseLevel = 0.00000000;            // Signal close level
-INPUT ENUM_MARKET_EVENT BearsPower_SignalCloseMethod1 = 0;        // Signal close method 1
-INPUT ENUM_MARKET_EVENT BearsPower_SignalCloseMethod2 = 0;        // Signal close method 2
-INPUT ENUM_MARKET_EVENT BearsPower_CloseCondition = C_BEARSPOWER_BUY_SELL;  // Close condition
-INPUT double BearsPower_MaxSpread = 6.0;                                    // Max spread to trade (pips)
+INPUT int BearsPower_Period = 13;                                             // Period
+INPUT ENUM_APPLIED_PRICE BearsPower_Applied_Price = PRICE_CLOSE;              // Applied Price
+INPUT int BearsPower_Shift = 0;                         // Shift (relative to the current bar, 0 - default)
+INPUT int BearsPower_SignalOpenMethod = 0;              // Signal open method (0-
+INPUT double BearsPower_SignalOpenLevel = 0.00000000;   // Signal open level
+INPUT int BearsPower_SignalCloseMethod = 0;             // Signal close method
+INPUT double BearsPower_SignalCloseLevel = 0.00000000;  // Signal close level
+INPUT int BearsPower_PriceLimitMethod = 0;              // Price limit method
+INPUT double BearsPower_PriceLimitLevel = 0;            // Price limit level
+INPUT double BearsPower_MaxSpread = 6.0;                // Max spread to trade (pips)
 
 // Struct to define strategy parameters to override.
 struct Stg_BearsPower_Params : Stg_Params {
   unsigned int BearsPower_Period;
   ENUM_APPLIED_PRICE BearsPower_Applied_Price;
   int BearsPower_Shift;
-  ENUM_TRAIL_TYPE BearsPower_TrailingStopMethod;
-  ENUM_TRAIL_TYPE BearsPower_TrailingProfitMethod;
+  long BearsPower_SignalOpenMethod;
   double BearsPower_SignalOpenLevel;
-  long BearsPower_SignalBaseMethod;
-  long BearsPower_SignalOpenMethod1;
-  long BearsPower_SignalOpenMethod2;
+  int BearsPower_SignalCloseMethod;
   double BearsPower_SignalCloseLevel;
-  ENUM_MARKET_EVENT BearsPower_SignalCloseMethod1;
-  ENUM_MARKET_EVENT BearsPower_SignalCloseMethod2;
+  double BearsPower_PriceLimitLevel;
+  int BearsPower_PriceLimitMethod;
   double BearsPower_MaxSpread;
 
   // Constructor: Set default param values.
@@ -52,15 +44,12 @@ struct Stg_BearsPower_Params : Stg_Params {
       : BearsPower_Period(::BearsPower_Period),
         BearsPower_Applied_Price(::BearsPower_Applied_Price),
         BearsPower_Shift(::BearsPower_Shift),
-        BearsPower_TrailingStopMethod(::BearsPower_TrailingStopMethod),
-        BearsPower_TrailingProfitMethod(::BearsPower_TrailingProfitMethod),
+        BearsPower_SignalOpenMethod(::BearsPower_SignalOpenMethod),
         BearsPower_SignalOpenLevel(::BearsPower_SignalOpenLevel),
-        BearsPower_SignalBaseMethod(::BearsPower_SignalBaseMethod),
-        BearsPower_SignalOpenMethod1(::BearsPower_SignalOpenMethod1),
-        BearsPower_SignalOpenMethod2(::BearsPower_SignalOpenMethod2),
+        BearsPower_SignalCloseMethod(::BearsPower_SignalCloseMethod),
         BearsPower_SignalCloseLevel(::BearsPower_SignalCloseLevel),
-        BearsPower_SignalCloseMethod1(::BearsPower_SignalCloseMethod1),
-        BearsPower_SignalCloseMethod2(::BearsPower_SignalCloseMethod2),
+        BearsPower_PriceLimitMethod(::BearsPower_PriceLimitMethod),
+        BearsPower_PriceLimitLevel(::BearsPower_PriceLimitLevel),
         BearsPower_MaxSpread(::BearsPower_MaxSpread) {}
 };
 
@@ -112,11 +101,8 @@ class Stg_BearsPower : public Strategy {
     StgParams sparams(new Trade(_tf, _Symbol), new Indi_BearsPower(bp_params, bp_iparams, cparams), NULL, NULL);
     sparams.logger.SetLevel(_log_level);
     sparams.SetMagicNo(_magic_no);
-    sparams.SetSignals(_params.BearsPower_SignalBaseMethod, _params.BearsPower_SignalOpenMethod1,
-                       _params.BearsPower_SignalOpenMethod2, _params.BearsPower_SignalCloseMethod1,
-                       _params.BearsPower_SignalCloseMethod2, _params.BearsPower_SignalOpenLevel,
-                       _params.BearsPower_SignalCloseLevel);
-    sparams.SetStops(_params.BearsPower_TrailingProfitMethod, _params.BearsPower_TrailingStopMethod);
+    sparams.SetSignals(_params.BearsPower_SignalOpenMethod, _params.BearsPower_SignalOpenMethod,
+                       _params.BearsPower_SignalCloseMethod, _params.BearsPower_SignalCloseMethod);
     sparams.SetMaxSpread(_params.BearsPower_MaxSpread);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_BearsPower(sparams, "BearsPower");
@@ -126,13 +112,11 @@ class Stg_BearsPower : public Strategy {
   /**
    * Check strategy's opening signal.
    */
-  bool SignalOpen(ENUM_ORDER_TYPE _cmd, long _signal_method = EMPTY, double _signal_level = EMPTY) {
+  bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
     bool _result = false;
     double bears_0 = ((Indi_BearsPower *)this.Data()).GetValue(0);
     double bears_1 = ((Indi_BearsPower *)this.Data()).GetValue(1);
     double bears_2 = ((Indi_BearsPower *)this.Data()).GetValue(2);
-    if (_signal_method == EMPTY) _signal_method = GetSignalBaseMethod();
-    if (_signal_level == EMPTY) _signal_level = GetSignalOpenLevel();
     switch (_cmd) {
       case ORDER_TYPE_BUY:
         // @todo
@@ -147,8 +131,23 @@ class Stg_BearsPower : public Strategy {
   /**
    * Check strategy's closing signal.
    */
-  bool SignalClose(ENUM_ORDER_TYPE _cmd, long _signal_method = EMPTY, double _signal_level = EMPTY) {
-    if (_signal_level == EMPTY) _signal_level = GetSignalCloseLevel();
-    return SignalOpen(Order::NegateOrderType(_cmd), _signal_method, _signal_level);
+  bool SignalClose(ENUM_ORDER_TYPE _cmd, int _method = 0, double _level = 0.0) {
+    return SignalOpen(Order::NegateOrderType(_cmd), _method, _level);
+  }
+
+  /**
+   * Gets price limit value for profit take or stop loss.
+   */
+  double PriceLimit(ENUM_ORDER_TYPE _cmd, ENUM_STG_PRICE_LIMIT_MODE _mode, int _method = 0, double _level = 0.0) {
+    double _trail = _level * Market().GetPipSize();
+    int _direction = Order::OrderDirection(_cmd) * (_mode == LIMIT_VALUE_STOP ? -1 : 1);
+    double _default_value = Market().GetCloseOffer(_cmd) + _trail * _method * _direction;
+    double _result = _default_value;
+    switch (_method) {
+      case 0: {
+        // @todo
+      }
+    }
+    return _result;
   }
 };

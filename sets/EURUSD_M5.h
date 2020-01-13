@@ -12,15 +12,12 @@ struct Stg_BearsPower_EURUSD_M5_Params : Stg_BearsPower_Params {
     BearsPower_Period = 13;
     BearsPower_Applied_Price = 1;
     BearsPower_Shift = 0;
-    BearsPower_TrailingStopMethod = 0;
-    BearsPower_TrailingProfitMethod = 0;
+    BearsPower_SignalOpenMethod = 0;
     BearsPower_SignalOpenLevel = 0;
-    BearsPower_SignalBaseMethod = 0;
-    BearsPower_SignalOpenMethod1 = 0;
-    BearsPower_SignalOpenMethod2 = 0;
+    BearsPower_SignalCloseMethod = 0;
     BearsPower_SignalCloseLevel = 0;
-    BearsPower_SignalCloseMethod1 = 0;
-    BearsPower_SignalCloseMethod2 = 0;
+    BearsPower_PriceLimitMethod = 0;
+    BearsPower_PriceLimitLevel = 0;
     BearsPower_MaxSpread = 0;
   }
 };
