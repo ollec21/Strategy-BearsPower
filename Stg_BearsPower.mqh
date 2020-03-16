@@ -108,22 +108,33 @@ class Stg_BearsPower : public Strategy {
     double level = _level * Chart().GetPipSize();
     switch (_cmd) {
       case ORDER_TYPE_BUY:
-        // Sell: if the indicator is below zero and 2 consecutive columns are red or if and ...
-        // ... 1 consecutive column is red.
-        _result &= _indi[CURR].value[0] < _level;
+        // The histogram is above zero level.
+        // Fall of histogram, which is above zero, indicates that while the bulls prevail on the market,
+        // their strength begins to weaken and the bears gradually increase their pressure.
+        _result &= _indi[CURR].value[0] > _level;
         if (_method != 0) {
           if (METHOD(_method, 0)) _result &= _indi[PREV].value[0] < _indi[PPREV].value[0]; // ... 2 consecutive columns are red.
           if (METHOD(_method, 1)) _result &= _indi[PPREV].value[0] < _indi[3].value[0]; // ... 3 consecutive columns are red.
           if (METHOD(_method, 2)) _result &= _indi[3].value[0] < _indi[4].value[0]; // ... 4 consecutive columns are red.
+          if (METHOD(_method, 3)) _result &= _indi[PREV].value[0] > _indi[PPREV].value[0]; // ... 2 consecutive columns are green.
+          if (METHOD(_method, 4)) _result &= _indi[PPREV].value[0] > _indi[3].value[0]; // ... 3 consecutive columns are green.
+          // When histogram passes through zero level from bottom up,
+          // bears have lost control over the market and bulls increase pressure.
+          if (METHOD(_method, 5)) _result &= _indi[3].value[0] < _indi[4].value[0]; // ... 4 consecutive columns are green.
         }
         break;
       case ORDER_TYPE_SELL:
-        // Buy: if 2 consecutive columns are increasing ...
-        _result &= _indi[CURR].value[0] > _level;
+        // Strong bearish trend - the histogram is located below the central line.
+        _result &= _indi[CURR].value[0] < _level;
         if (_method != 0) {
+          // When histogram is below zero level, but with the rays pointing upwards (upward trend),
+          // then we can assume that, in spite of still bearish sentiment in the market, their strength begins to weaken.
           if (METHOD(_method, 0)) _result &= _indi[PREV].value[0] > _indi[PPREV].value[0]; // ... 2 consecutive columns are green.
           if (METHOD(_method, 1)) _result &= _indi[PPREV].value[0] > _indi[3].value[0]; // ... 3 consecutive columns are green.
           if (METHOD(_method, 2)) _result &= _indi[3].value[0] > _indi[4].value[0]; // ... 4 consecutive columns are green.
+          if (METHOD(_method, 3)) _result &= _indi[PREV].value[0] < _indi[PPREV].value[0]; // ... 2 consecutive columns are red.
+          if (METHOD(_method, 4)) _result &= _indi[PPREV].value[0] < _indi[3].value[0]; // ... 3 consecutive columns are red.
+          if (METHOD(_method, 5)) _result &= _indi[3].value[0] > _indi[4].value[0]; // ... 4 consecutive columns are red.
         }
         break;
     }
