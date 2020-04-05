@@ -87,6 +87,7 @@ class Stg_BearsPower : public Strategy {
     sparams.SetSignals(_params.BearsPower_SignalOpenMethod, _params.BearsPower_SignalOpenMethod,
                        _params.BearsPower_SignalOpenFilterMethod, _params.BearsPower_SignalOpenBoostMethod,
                        _params.BearsPower_SignalCloseMethod, _params.BearsPower_SignalCloseMethod);
+    sparams.SetPriceLimits(_params.BearsPower_PriceLimitMethod, _params.BearsPower_PriceLimitLevel);
     sparams.SetMaxSpread(_params.BearsPower_MaxSpread);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_BearsPower(sparams, "BearsPower");
