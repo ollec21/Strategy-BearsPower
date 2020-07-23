@@ -82,7 +82,7 @@ class Stg_BearsPower : public Strategy {
     BearsPowerParams bp_params(_params.BearsPower_Period, _params.BearsPower_Applied_Price);
     bp_params.SetTf(_tf);
     StgParams sparams(new Trade(_tf, _Symbol), new Indi_BearsPower(bp_params), NULL, NULL);
-    sparams.logger.SetLevel(_log_level);
+    sparams.logger.Ptr().SetLevel(_log_level);
     sparams.SetMagicNo(_magic_no);
     sparams.SetSignals(_params.BearsPower_SignalOpenMethod, _params.BearsPower_SignalOpenMethod,
                        _params.BearsPower_SignalOpenFilterMethod, _params.BearsPower_SignalOpenBoostMethod,
