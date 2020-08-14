@@ -8,14 +8,14 @@ INPUT int BearsPower_Period = 13;                                 // Period
 INPUT ENUM_APPLIED_PRICE BearsPower_Applied_Price = PRICE_CLOSE;  // Applied Price
 INPUT int BearsPower_Shift = 0;                                   // Shift (relative to the current bar, 0 - default)
 INPUT int BearsPower_SignalOpenMethod = 0;                        // Signal open method (0-
-INPUT float BearsPower_SignalOpenLevel = 0.00000000;             // Signal open level
+INPUT float BearsPower_SignalOpenLevel = 0.00000000;              // Signal open level
 INPUT int BearsPower_SignalOpenFilterMethod = 0;                  // Signal filter method
 INPUT int BearsPower_SignalOpenBoostMethod = 0;                   // Signal boost method
 INPUT int BearsPower_SignalCloseMethod = 0;                       // Signal close method
-INPUT float BearsPower_SignalCloseLevel = 0.00000000;            // Signal close level
+INPUT float BearsPower_SignalCloseLevel = 0.00000000;             // Signal close level
 INPUT int BearsPower_PriceLimitMethod = 0;                        // Price limit method
-INPUT float BearsPower_PriceLimitLevel = 0;                      // Price limit level
-INPUT float BearsPower_MaxSpread = 6.0;                          // Max spread to trade (pips)
+INPUT float BearsPower_PriceLimitLevel = 0;                       // Price limit level
+INPUT float BearsPower_MaxSpread = 6.0;                           // Max spread to trade (pips)
 
 // Includes.
 #include <EA31337-classes/Indicators/Indi_BearsPower.mqh>
@@ -27,14 +27,14 @@ struct Stg_BearsPower_Params : StgParams {
   ENUM_APPLIED_PRICE BearsPower_Applied_Price;
   int BearsPower_Shift;
   int BearsPower_SignalOpenMethod;
-  double BearsPower_SignalOpenLevel;
+  float BearsPower_SignalOpenLevel;
   int BearsPower_SignalOpenFilterMethod;
   int BearsPower_SignalOpenBoostMethod;
   int BearsPower_SignalCloseMethod;
-  double BearsPower_SignalCloseLevel;
-  double BearsPower_PriceLimitLevel;
+  float BearsPower_SignalCloseLevel;
+  float BearsPower_PriceLimitLevel;
   int BearsPower_PriceLimitMethod;
-  double BearsPower_MaxSpread;
+  float BearsPower_MaxSpread;
 
   // Constructor: Set default param values.
   Stg_BearsPower_Params()
@@ -171,6 +171,6 @@ class Stg_BearsPower : public Strategy {
         break;
       }
     }
-    return _result;
+    return (float)_result;
   }
 };
