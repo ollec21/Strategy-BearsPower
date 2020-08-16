@@ -3,58 +3,67 @@
  * Implements BearsPower strategy based on the Bears Power indicator.
  */
 
-// User input params.
-INPUT int BearsPower_Period = 13;                                 // Period
-INPUT ENUM_APPLIED_PRICE BearsPower_Applied_Price = PRICE_CLOSE;  // Applied Price
-INPUT int BearsPower_Shift = 0;                                   // Shift (relative to the current bar, 0 - default)
-INPUT int BearsPower_SignalOpenMethod = 0;                        // Signal open method (0-
-INPUT float BearsPower_SignalOpenLevel = 0.00000000;              // Signal open level
-INPUT int BearsPower_SignalOpenFilterMethod = 0;                  // Signal filter method
-INPUT int BearsPower_SignalOpenBoostMethod = 0;                   // Signal boost method
-INPUT int BearsPower_SignalCloseMethod = 0;                       // Signal close method
-INPUT float BearsPower_SignalCloseLevel = 0.00000000;             // Signal close level
-INPUT int BearsPower_PriceLimitMethod = 0;                        // Price limit method
-INPUT float BearsPower_PriceLimitLevel = 0;                       // Price limit level
-INPUT float BearsPower_MaxSpread = 6.0;                           // Max spread to trade (pips)
-
 // Includes.
 #include <EA31337-classes/Indicators/Indi_BearsPower.mqh>
 #include <EA31337-classes/Strategy.mqh>
 
+// User input params.
+INPUT float BearsPower_LotSize = 0;                    // Lot size
+INPUT int BearsPower_SignalOpenMethod = 0;             // Signal open method (0-
+INPUT float BearsPower_SignalOpenLevel = 0.00000000;   // Signal open level
+INPUT int BearsPower_SignalOpenFilterMethod = 0;       // Signal filter method
+INPUT int BearsPower_SignalOpenBoostMethod = 0;        // Signal boost method
+INPUT int BearsPower_SignalCloseMethod = 0;            // Signal close method
+INPUT float BearsPower_SignalCloseLevel = 0.00000000;  // Signal close level
+INPUT int BearsPower_PriceLimitMethod = 0;             // Price limit method
+INPUT float BearsPower_PriceLimitLevel = 0;            // Price limit level
+INPUT int BearsPower_TickFilterMethod = 0;             // Tick filter method
+INPUT float BearsPower_MaxSpread = 6.0;                // Max spread to trade (pips)
+INPUT int BearsPower_Shift = 0;                        // Shift (relative to the current bar, 0 - default)
+INPUT string __BearsPower_Indi_BearsPower_Parameters__ =
+    "-- BearsPower strategy: BearsPower indicator params --";  // >>> BearsPower strategy: BearsPower indicator <<<
+INPUT int Indi_BearsPower_Period = 13;                         // Period
+INPUT ENUM_APPLIED_PRICE Indi_BearsPower_Applied_Price = PRICE_CLOSE;  // Applied Price
+
+// Structs.
+
+// Defines struct with default user indicator values.
+struct Indi_BearsPower_Params_Defaults : BearsPowerParams {
+  Indi_BearsPower_Params_Defaults() : BearsPowerParams(::Indi_BearsPower_Period, ::Indi_BearsPower_Applied_Price) {}
+} indi_bears_defaults;
+
+// Defines struct to store indicator parameter values.
+struct Indi_BearsPower_Params : public BearsPowerParams {
+  // Struct constructors.
+  void Indi_BearsPower_Params(BearsPowerParams &_params, ENUM_TIMEFRAMES _tf) : BearsPowerParams(_params, _tf) {}
+};
+
+// Defines struct with default user strategy values.
+struct Stg_BearsPower_Params_Defaults : StgParams {
+  Stg_BearsPower_Params_Defaults()
+      : StgParams(::BearsPower_SignalOpenMethod, ::BearsPower_SignalOpenFilterMethod, ::BearsPower_SignalOpenLevel,
+                  ::BearsPower_SignalOpenBoostMethod, ::BearsPower_SignalCloseMethod, ::BearsPower_SignalCloseLevel,
+                  ::BearsPower_PriceLimitMethod, ::BearsPower_PriceLimitLevel, ::BearsPower_TickFilterMethod,
+                  ::BearsPower_MaxSpread, ::BearsPower_Shift) {}
+} stg_bears_defaults;
+
 // Struct to define strategy parameters to override.
 struct Stg_BearsPower_Params : StgParams {
-  unsigned int BearsPower_Period;
-  ENUM_APPLIED_PRICE BearsPower_Applied_Price;
-  int BearsPower_Shift;
-  int BearsPower_SignalOpenMethod;
-  float BearsPower_SignalOpenLevel;
-  int BearsPower_SignalOpenFilterMethod;
-  int BearsPower_SignalOpenBoostMethod;
-  int BearsPower_SignalCloseMethod;
-  float BearsPower_SignalCloseLevel;
-  float BearsPower_PriceLimitLevel;
-  int BearsPower_PriceLimitMethod;
-  float BearsPower_MaxSpread;
+  Indi_BearsPower_Params iparams;
+  StgParams sparams;
 
-  // Constructor: Set default param values.
-  Stg_BearsPower_Params()
-      : BearsPower_Period(::BearsPower_Period),
-        BearsPower_Applied_Price(::BearsPower_Applied_Price),
-        BearsPower_Shift(::BearsPower_Shift),
-        BearsPower_SignalOpenMethod(::BearsPower_SignalOpenMethod),
-        BearsPower_SignalOpenLevel(::BearsPower_SignalOpenLevel),
-        BearsPower_SignalOpenFilterMethod(::BearsPower_SignalOpenFilterMethod),
-        BearsPower_SignalOpenBoostMethod(::BearsPower_SignalOpenBoostMethod),
-        BearsPower_SignalCloseMethod(::BearsPower_SignalCloseMethod),
-        BearsPower_SignalCloseLevel(::BearsPower_SignalCloseLevel),
-        BearsPower_PriceLimitMethod(::BearsPower_PriceLimitMethod),
-        BearsPower_PriceLimitLevel(::BearsPower_PriceLimitLevel),
-        BearsPower_MaxSpread(::BearsPower_MaxSpread) {}
+  // Struct constructors.
+  Stg_BearsPower_Params(Indi_BearsPower_Params &_iparams, StgParams &_sparams)
+      : iparams(indi_bears_defaults, _iparams.tf), sparams(stg_bears_defaults) {
+    iparams = _iparams;
+    sparams = _sparams;
+  }
 };
 
 // Loads pair specific param values.
 #include "sets/EURUSD_H1.h"
 #include "sets/EURUSD_H4.h"
+#include "sets/EURUSD_H8.h"
 #include "sets/EURUSD_M1.h"
 #include "sets/EURUSD_M15.h"
 #include "sets/EURUSD_M30.h"
@@ -66,24 +75,24 @@ class Stg_BearsPower : public Strategy {
 
   static Stg_BearsPower *Init(ENUM_TIMEFRAMES _tf = NULL, long _magic_no = NULL, ENUM_LOG_LEVEL _log_level = V_INFO) {
     // Initialize strategy initial values.
-    Stg_BearsPower_Params _params;
+    Indi_BearsPower_Params _indi_params(indi_bears_defaults, _tf);
+    StgParams _stg_params(stg_bears_defaults);
     if (!Terminal::IsOptimization()) {
-      SetParamsByTf<Stg_BearsPower_Params>(_params, _tf, stg_bears_m1, stg_bears_m5, stg_bears_m15, stg_bears_m30,
-                                           stg_bears_h1, stg_bears_h4, stg_bears_h4);
+      SetParamsByTf<Indi_BearsPower_Params>(_indi_params, _tf, indi_bears_m1, indi_bears_m5, indi_bears_m15,
+                                            indi_bears_m30, indi_bears_h1, indi_bears_h4, indi_bears_h8);
+      SetParamsByTf<StgParams>(_stg_params, _tf, stg_bears_m1, stg_bears_m5, stg_bears_m15, stg_bears_m30, stg_bears_h1,
+                               stg_bears_h4, stg_bears_h8);
     }
+    // Initialize indicator.
+    BearsPowerParams bears_params(_indi_params);
+    _stg_params.SetIndicator(new Indi_BearsPower(_indi_params));
     // Initialize strategy parameters.
-    BearsPowerParams bp_params(_params.BearsPower_Period, _params.BearsPower_Applied_Price);
-    bp_params.SetTf(_tf);
-    StgParams sparams(new Trade(_tf, _Symbol), new Indi_BearsPower(bp_params), NULL, NULL);
-    sparams.logger.Ptr().SetLevel(_log_level);
-    sparams.SetMagicNo(_magic_no);
-    sparams.SetSignals(_params.BearsPower_SignalOpenMethod, _params.BearsPower_SignalOpenMethod,
-                       _params.BearsPower_SignalOpenFilterMethod, _params.BearsPower_SignalOpenBoostMethod,
-                       _params.BearsPower_SignalCloseMethod, _params.BearsPower_SignalCloseMethod);
-    sparams.SetPriceLimits(_params.BearsPower_PriceLimitMethod, _params.BearsPower_PriceLimitLevel);
-    sparams.SetMaxSpread(_params.BearsPower_MaxSpread);
+    _stg_params.GetLog().SetLevel(_log_level);
+    _stg_params.SetMagicNo(_magic_no);
+    _stg_params.SetTf(_tf, _Symbol);
     // Initialize strategy instance.
-    Strategy *_strat = new Stg_BearsPower(sparams, "BearsPower");
+    Strategy *_strat = new Stg_BearsPower(_stg_params, "BearsPower");
+    _stg_params.SetStops(_strat, _strat);
     return _strat;
   }
 
