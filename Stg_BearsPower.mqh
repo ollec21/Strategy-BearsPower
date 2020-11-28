@@ -167,13 +167,13 @@ class Stg_BearsPower : public Strategy {
     double _default_value = Market().GetCloseOffer(_cmd) + _trail * _method * _direction;
     double _result = _default_value;
     switch (_method) {
-      case 0: {
+      case 1: {
         int _bar_count0 = (int)_level * (int)_indi.GetPeriod();
         _result = _direction > 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count0))
                                  : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count0));
         break;
       }
-      case 1: {
+      case 2: {
         int _bar_count1 = (int)_level * (int)_indi.GetPeriod();
         _result = _direction < 0 ? _indi.GetPrice(PRICE_HIGH, _indi.GetHighest(_bar_count1))
                                  : _indi.GetPrice(PRICE_LOW, _indi.GetLowest(_bar_count1));
