@@ -3,10 +3,6 @@
  * Implements BearsPower strategy based on the Bears Power indicator.
  */
 
-// Includes.
-#include <EA31337-classes/Indicators/Indi_BearsPower.mqh>
-#include <EA31337-classes/Strategy.mqh>
-
 // User input params.
 INPUT float BearsPower_LotSize = 0;                    // Lot size
 INPUT int BearsPower_SignalOpenMethod = 0;             // Signal open method (0-
