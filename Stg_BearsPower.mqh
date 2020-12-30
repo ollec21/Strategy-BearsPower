@@ -16,6 +16,7 @@ INPUT float BearsPower_PriceStopLevel = 0;             // Price stop level
 INPUT int BearsPower_TickFilterMethod = 0;             // Tick filter method
 INPUT float BearsPower_MaxSpread = 6.0;                // Max spread to trade (pips)
 INPUT int BearsPower_Shift = 0;                        // Shift (relative to the current bar, 0 - default)
+INPUT int BearsPower_OrderCloseTime = -10;             // Order close time in mins (>0) or bars (<0)
 INPUT string __BearsPower_Indi_BearsPower_Parameters__ =
     "-- BearsPower strategy: BearsPower indicator params --";  // >>> BearsPower strategy: BearsPower indicator <<<
 INPUT int Indi_BearsPower_Period = 13;                         // Period
@@ -40,7 +41,7 @@ struct Stg_BearsPower_Params_Defaults : StgParams {
       : StgParams(::BearsPower_SignalOpenMethod, ::BearsPower_SignalOpenFilterMethod, ::BearsPower_SignalOpenLevel,
                   ::BearsPower_SignalOpenBoostMethod, ::BearsPower_SignalCloseMethod, ::BearsPower_SignalCloseLevel,
                   ::BearsPower_PriceStopMethod, ::BearsPower_PriceStopLevel, ::BearsPower_TickFilterMethod,
-                  ::BearsPower_MaxSpread, ::BearsPower_Shift) {}
+                  ::BearsPower_MaxSpread, ::BearsPower_Shift, ::BearsPower_OrderCloseTime) {}
 } stg_bears_defaults;
 
 // Struct to define strategy parameters to override.
