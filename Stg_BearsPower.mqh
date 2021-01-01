@@ -19,14 +19,15 @@ INPUT int BearsPower_Shift = 0;                        // Shift (relative to the
 INPUT int BearsPower_OrderCloseTime = -10;             // Order close time in mins (>0) or bars (<0)
 INPUT string __BearsPower_Indi_BearsPower_Parameters__ =
     "-- BearsPower strategy: BearsPower indicator params --";  // >>> BearsPower strategy: BearsPower indicator <<<
-INPUT int Indi_BearsPower_Period = 13;                         // Period
-INPUT ENUM_APPLIED_PRICE Indi_BearsPower_Applied_Price = PRICE_CLOSE;  // Applied Price
+INPUT int BearsPower_Indi_BearsPower_Period = 13;              // Period
+INPUT ENUM_APPLIED_PRICE BearsPower_Indi_BearsPower_Applied_Price = PRICE_CLOSE;  // Applied Price
 
 // Structs.
 
 // Defines struct with default user indicator values.
 struct Indi_BearsPower_Params_Defaults : BearsPowerParams {
-  Indi_BearsPower_Params_Defaults() : BearsPowerParams(::Indi_BearsPower_Period, ::Indi_BearsPower_Applied_Price) {}
+  Indi_BearsPower_Params_Defaults()
+      : BearsPowerParams(::BearsPower_Indi_BearsPower_Period, ::BearsPower_Indi_BearsPower_Applied_Price) {}
 } indi_bears_defaults;
 
 // Defines struct to store indicator parameter values.
