@@ -86,6 +86,7 @@ jobs:
           OptFormatJson: true
           OptOptimize: true
           OptVerbose: true
+          # yamllint disable-line rule:line-length
           SetFile: ${{ github.workspace }}/sets/Indi_BearsPower_Applied_Price.set
           TestExpert: "Stg_BearsPower"
           TestPeriod: ${{ matrix.tf }}

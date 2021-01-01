@@ -4,19 +4,19 @@
  */
 
 // User input params.
-INPUT float BearsPower_LotSize = 0;                    // Lot size
-INPUT int BearsPower_SignalOpenMethod = 0;             // Signal open method (0-
-INPUT float BearsPower_SignalOpenLevel = 0.00000000;   // Signal open level
-INPUT int BearsPower_SignalOpenFilterMethod = 0;       // Signal filter method
-INPUT int BearsPower_SignalOpenBoostMethod = 0;        // Signal boost method
-INPUT int BearsPower_SignalCloseMethod = 0;            // Signal close method
-INPUT float BearsPower_SignalCloseLevel = 0.00000000;  // Signal close level
-INPUT int BearsPower_PriceStopMethod = 0;              // Price stop method
-INPUT float BearsPower_PriceStopLevel = 0;             // Price stop level
-INPUT int BearsPower_TickFilterMethod = 0;             // Tick filter method
-INPUT float BearsPower_MaxSpread = 6.0;                // Max spread to trade (pips)
-INPUT int BearsPower_Shift = 0;                        // Shift (relative to the current bar, 0 - default)
-INPUT int BearsPower_OrderCloseTime = -10;             // Order close time in mins (>0) or bars (<0)
+INPUT float BearsPower_LotSize = 0;               // Lot size
+INPUT int BearsPower_SignalOpenMethod = 0;        // Signal open method (0-
+INPUT float BearsPower_SignalOpenLevel = 0.0f;    // Signal open level
+INPUT int BearsPower_SignalOpenFilterMethod = 1;  // Signal filter method
+INPUT int BearsPower_SignalOpenBoostMethod = 0;   // Signal boost method
+INPUT int BearsPower_SignalCloseMethod = 0;       // Signal close method
+INPUT float BearsPower_SignalCloseLevel = 0.0f;   // Signal close level
+INPUT int BearsPower_PriceStopMethod = 0;         // Price stop method
+INPUT float BearsPower_PriceStopLevel = 0;        // Price stop level
+INPUT int BearsPower_TickFilterMethod = 1;        // Tick filter method
+INPUT float BearsPower_MaxSpread = 4.0;           // Max spread to trade (pips)
+INPUT int BearsPower_Shift = 0;                   // Shift (relative to the current bar, 0 - default)
+INPUT int BearsPower_OrderCloseTime = -20;        // Order close time in mins (>0) or bars (<0)
 INPUT string __BearsPower_Indi_BearsPower_Parameters__ =
     "-- BearsPower strategy: BearsPower indicator params --";  // >>> BearsPower strategy: BearsPower indicator <<<
 INPUT int BearsPower_Indi_BearsPower_Period = 13;              // Period
