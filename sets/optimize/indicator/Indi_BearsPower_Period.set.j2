@@ -9,5 +9,5 @@ BearsPower_Indi_BearsPower_Shift={{ shift | default(0) }}
 BearsPower_LotSize={{ lot_size | default(0) }}
 BearsPower_PriceStopMethod=0
 BearsPower_SignalOpenFilterMethod=1
-BearsPower_SignalOpenLevel={{ signal_open_level | default(0) }}
+BearsPower_SignalOpenLevel={{ signal_open_level | replace("(float)", "") | float | default(0) }}
 BearsPower_TickFilterMethod=1
