@@ -25,7 +25,7 @@ struct Stg_BearsPower_Params_{{ Timeframe }} : StgParams {
     signal_close_method = {{ BearsPower_SignalCloseMethod | default(0) }};
     signal_close_level = (float){{ BearsPower_SignalCloseLevel | default(0) }};
     price_stop_method = {{ BearsPower_PriceStopMethod | default(0) }};
-    price_stop_level = {{ BearsPower_SignalCloseLevel | default(1) }};
+    price_stop_level = (float){{ BearsPower_SignalCloseLevel | default(1) }};
     tick_filter_method = {{ BearsPower_TickFilterMethod  | default(1) }};
     max_spread = {{ BearsPower_MaxSpread | default(0) }};
   }
