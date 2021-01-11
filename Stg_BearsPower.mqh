@@ -21,20 +21,16 @@ INPUT string __BearsPower_Indi_BearsPower_Parameters__ =
     "-- BearsPower strategy: BearsPower indicator params --";  // >>> BearsPower strategy: BearsPower indicator <<<
 INPUT int BearsPower_Indi_BearsPower_Period = 13;              // Period
 INPUT ENUM_APPLIED_PRICE BearsPower_Indi_BearsPower_Applied_Price = PRICE_CLOSE;  // Applied Price
+INPUT int BearsPower_Indi_BearsPower_Shift = 0;                                   // Shift
 
 // Structs.
 
 // Defines struct with default user indicator values.
 struct Indi_BearsPower_Params_Defaults : BearsPowerParams {
   Indi_BearsPower_Params_Defaults()
-      : BearsPowerParams(::BearsPower_Indi_BearsPower_Period, ::BearsPower_Indi_BearsPower_Applied_Price) {}
+      : BearsPowerParams(::BearsPower_Indi_BearsPower_Period, ::BearsPower_Indi_BearsPower_Applied_Price,
+                         ::BearsPower_Indi_BearsPower_Shift) {}
 } indi_bears_defaults;
-
-// Defines struct to store indicator parameter values.
-struct Indi_BearsPower_Params : public BearsPowerParams {
-  // Struct constructors.
-  void Indi_BearsPower_Params(BearsPowerParams &_params, ENUM_TIMEFRAMES _tf) : BearsPowerParams(_params, _tf) {}
-};
 
 // Defines struct with default user strategy values.
 struct Stg_BearsPower_Params_Defaults : StgParams {
@@ -47,11 +43,11 @@ struct Stg_BearsPower_Params_Defaults : StgParams {
 
 // Struct to define strategy parameters to override.
 struct Stg_BearsPower_Params : StgParams {
-  Indi_BearsPower_Params iparams;
+  BearsPowerParams iparams;
   StgParams sparams;
 
   // Struct constructors.
-  Stg_BearsPower_Params(Indi_BearsPower_Params &_iparams, StgParams &_sparams)
+  Stg_BearsPower_Params(BearsPowerParams &_iparams, StgParams &_sparams)
       : iparams(indi_bears_defaults, _iparams.tf), sparams(stg_bears_defaults) {
     iparams = _iparams;
     sparams = _sparams;
@@ -73,11 +69,11 @@ class Stg_BearsPower : public Strategy {
 
   static Stg_BearsPower *Init(ENUM_TIMEFRAMES _tf = NULL, long _magic_no = NULL, ENUM_LOG_LEVEL _log_level = V_INFO) {
     // Initialize strategy initial values.
-    Indi_BearsPower_Params _indi_params(indi_bears_defaults, _tf);
+    BearsPowerParams _indi_params(indi_bears_defaults, _tf);
     StgParams _stg_params(stg_bears_defaults);
     if (!Terminal::IsOptimization()) {
-      SetParamsByTf<Indi_BearsPower_Params>(_indi_params, _tf, indi_bears_m1, indi_bears_m5, indi_bears_m15,
-                                            indi_bears_m30, indi_bears_h1, indi_bears_h4, indi_bears_h8);
+      SetParamsByTf<BearsPowerParams>(_indi_params, _tf, indi_bears_m1, indi_bears_m5, indi_bears_m15, indi_bears_m30,
+                                      indi_bears_h1, indi_bears_h4, indi_bears_h8);
       SetParamsByTf<StgParams>(_stg_params, _tf, stg_bears_m1, stg_bears_m5, stg_bears_m15, stg_bears_m30, stg_bears_h1,
                                stg_bears_h4, stg_bears_h8);
     }
