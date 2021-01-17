@@ -8,7 +8,7 @@ struct Indi_BearsPower_Params_{{ Timeframe }} : BearsPowerParams {
   Indi_BearsPower_Params_{{ Timeframe }}() : BearsPowerParams(indi_bears_defaults, PERIOD_{{ Timeframe }}) {
     applied_price = (ENUM_APPLIED_PRICE){{ BearsPower_Indi_BearsPower_Applied_Price | default(0) }};
     period = {{ BearsPower_Indi_BearsPower_Period | default(0) }};
-    shift = {{ BearsPower_Shift | default(0) }};
+    shift = {{ BearsPower_Indi_BearsPower_Shift | default(0) }};
   }
 } indi_bears_{{ Timeframe | lower }};
 
