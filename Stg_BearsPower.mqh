@@ -72,12 +72,12 @@ class Stg_BearsPower : public Strategy {
     // Initialize strategy initial values.
     BearsPowerParams _indi_params(indi_bears_defaults, _tf);
     StgParams _stg_params(stg_bears_defaults);
-    if (!Terminal::IsOptimization()) {
-      SetParamsByTf<BearsPowerParams>(_indi_params, _tf, indi_bears_m1, indi_bears_m5, indi_bears_m15, indi_bears_m30,
-                                      indi_bears_h1, indi_bears_h4, indi_bears_h8);
-      SetParamsByTf<StgParams>(_stg_params, _tf, stg_bears_m1, stg_bears_m5, stg_bears_m15, stg_bears_m30, stg_bears_h1,
-                               stg_bears_h4, stg_bears_h8);
-    }
+#ifdef __config__
+    SetParamsByTf<BearsPowerParams>(_indi_params, _tf, indi_bears_m1, indi_bears_m5, indi_bears_m15, indi_bears_m30,
+                                    indi_bears_h1, indi_bears_h4, indi_bears_h8);
+    SetParamsByTf<StgParams>(_stg_params, _tf, stg_bears_m1, stg_bears_m5, stg_bears_m15, stg_bears_m30, stg_bears_h1,
+                             stg_bears_h4, stg_bears_h8);
+#endif
     // Initialize indicator.
     BearsPowerParams bears_params(_indi_params);
     _stg_params.SetIndicator(new Indi_BearsPower(_indi_params));
