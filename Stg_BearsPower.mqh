@@ -4,19 +4,20 @@
  */
 
 // User input params.
-INPUT float BearsPower_LotSize = 0;               // Lot size
-INPUT int BearsPower_SignalOpenMethod = 0;        // Signal open method (0-
-INPUT float BearsPower_SignalOpenLevel = 0.0f;    // Signal open level
-INPUT int BearsPower_SignalOpenFilterMethod = 1;  // Signal filter method
-INPUT int BearsPower_SignalOpenBoostMethod = 0;   // Signal boost method
-INPUT int BearsPower_SignalCloseMethod = 0;       // Signal close method
-INPUT float BearsPower_SignalCloseLevel = 0.0f;   // Signal close level
-INPUT int BearsPower_PriceStopMethod = 0;         // Price stop method
-INPUT float BearsPower_PriceStopLevel = 0;        // Price stop level
-INPUT int BearsPower_TickFilterMethod = 1;        // Tick filter method
-INPUT float BearsPower_MaxSpread = 4.0;           // Max spread to trade (pips)
-INPUT int BearsPower_Shift = 0;                   // Shift (relative to the current bar, 0 - default)
-INPUT int BearsPower_OrderCloseTime = -20;        // Order close time in mins (>0) or bars (<0)
+INPUT string __BearsPower_Parameters__ = "-- BearsPower strategy params --";  // >>> BEARS POWER <<<
+INPUT float BearsPower_LotSize = 0;                                           // Lot size
+INPUT int BearsPower_SignalOpenMethod = 0;                                    // Signal open method (0-
+INPUT float BearsPower_SignalOpenLevel = 0.0f;                                // Signal open level
+INPUT int BearsPower_SignalOpenFilterMethod = 1;                              // Signal filter method
+INPUT int BearsPower_SignalOpenBoostMethod = 0;                               // Signal boost method
+INPUT int BearsPower_SignalCloseMethod = 0;                                   // Signal close method
+INPUT float BearsPower_SignalCloseLevel = 0.0f;                               // Signal close level
+INPUT int BearsPower_PriceStopMethod = 0;                                     // Price stop method
+INPUT float BearsPower_PriceStopLevel = 0;                                    // Price stop level
+INPUT int BearsPower_TickFilterMethod = 1;                                    // Tick filter method
+INPUT float BearsPower_MaxSpread = 4.0;                                       // Max spread to trade (pips)
+INPUT int BearsPower_Shift = 0;             // Shift (relative to the current bar, 0 - default)
+INPUT int BearsPower_OrderCloseTime = -20;  // Order close time in mins (>0) or bars (<0)
 INPUT string __BearsPower_Indi_BearsPower_Parameters__ =
     "-- BearsPower strategy: BearsPower indicator params --";  // >>> BearsPower strategy: BearsPower indicator <<<
 INPUT int BearsPower_Indi_BearsPower_Period = 13;              // Period
@@ -71,12 +72,12 @@ class Stg_BearsPower : public Strategy {
     // Initialize strategy initial values.
     BearsPowerParams _indi_params(indi_bears_defaults, _tf);
     StgParams _stg_params(stg_bears_defaults);
-    if (!Terminal::IsOptimization()) {
-      SetParamsByTf<BearsPowerParams>(_indi_params, _tf, indi_bears_m1, indi_bears_m5, indi_bears_m15, indi_bears_m30,
-                                      indi_bears_h1, indi_bears_h4, indi_bears_h8);
-      SetParamsByTf<StgParams>(_stg_params, _tf, stg_bears_m1, stg_bears_m5, stg_bears_m15, stg_bears_m30, stg_bears_h1,
-                               stg_bears_h4, stg_bears_h8);
-    }
+#ifdef __config__
+    SetParamsByTf<BearsPowerParams>(_indi_params, _tf, indi_bears_m1, indi_bears_m5, indi_bears_m15, indi_bears_m30,
+                                    indi_bears_h1, indi_bears_h4, indi_bears_h8);
+    SetParamsByTf<StgParams>(_stg_params, _tf, stg_bears_m1, stg_bears_m5, stg_bears_m15, stg_bears_m30, stg_bears_h1,
+                             stg_bears_h4, stg_bears_h8);
+#endif
     // Initialize indicator.
     BearsPowerParams bears_params(_indi_params);
     _stg_params.SetIndicator(new Indi_BearsPower(_indi_params));
@@ -86,7 +87,6 @@ class Stg_BearsPower : public Strategy {
     _stg_params.SetTf(_tf, _Symbol);
     // Initialize strategy instance.
     Strategy *_strat = new Stg_BearsPower(_stg_params, "BearsPower");
-    _stg_params.SetStops(_strat, _strat);
     return _strat;
   }
 
