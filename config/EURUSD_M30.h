@@ -7,7 +7,7 @@
 struct Indi_BearsPower_Params_M30 : BearsPowerParams {
   Indi_BearsPower_Params_M30() : BearsPowerParams(indi_bears_defaults, PERIOD_M30) {
     applied_price = (ENUM_APPLIED_PRICE)1;
-    period = 14;
+    period = 8;
     shift = 0;
   }
 } indi_bears_m30;
