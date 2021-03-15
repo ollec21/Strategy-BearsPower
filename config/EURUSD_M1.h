@@ -6,7 +6,7 @@
 // Defines indicator's parameter values for the given pair symbol and timeframe.
 struct Indi_BearsPower_Params_M1 : BearsPowerParams {
   Indi_BearsPower_Params_M1() : BearsPowerParams(indi_bears_defaults, PERIOD_M1) {
-    applied_price = (ENUM_APPLIED_PRICE)4;
+    applied_price = (ENUM_APPLIED_PRICE)2;
     period = 4;
     shift = 0;
   }
